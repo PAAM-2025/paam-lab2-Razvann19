@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun HomeScreen() {
-
         val text by remember { chiuitText }
 
         Surface(color = Color.White) {
@@ -95,36 +94,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*
-    Defines text sharing/sending *implicit* intent, opens the application chooser menu,
-    and starts a new activity which supports sharing/sending text.
-     */
     private fun shareChiuit(text: String) {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
+        val sendIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
         }
 
-        val intentChooser = Intent.createChooser(sendIntent, "Trimite...")
+        val intentChooser = Intent.createChooser(sendIntent, getString(R.string.app_name))
         startActivity(intentChooser)
     }
 
-    /*
-    Defines an *explicit* intent which will be used to start ComposeActivity.
-     */
     private fun composeChiuit(text: String) {
         val intent = Intent(this, ComposeActivity::class.java).apply {
             putExtra(Intent.EXTRA_TEXT, text)
         }
-
         resultLauncher.launch(intent)
     }
 
     private fun extractText(data: Intent?) {
         data?.let {
             val newText = it.getStringExtra(ComposeActivity.EXTRA_TEXT)
-
             if (!newText.isNullOrBlank()) {
                 chiuitText.value = newText
             }
